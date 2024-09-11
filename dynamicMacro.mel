@@ -1,0 +1,33 @@
+float $baseSize = 7;
+float $decSize = 1.5;
+float $currenthieght = 0;
+float $overlap = 3;
+
+// Base
+polySphere -r ($baseSize) -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
+move -r 0 ($currenthieght + $baseSize) 0;
+$currenthieght = $currenthieght + ($baseSize * 2);
+
+// Other Segements
+$baseSize -= $decSize;
+polySphere -r ($baseSize) -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
+move -r 0 ($currenthieght + $baseSize - $overlap) 0;
+$currenthieght = $currenthieght + ($baseSize * 2) - $overlap;
+
+$baseSize -= $decSize;
+polySphere -r ($baseSize) -sx 20 -sy 20 -ax 0 1 0 -cuv 2 -ch 1;
+move -r 0 ($currenthieght + $baseSize - $overlap) 0;
+$currenthieght = $currenthieght + ($baseSize * 2) - $overlap;
+
+// Add a hat
+$baseSize = 2;
+$overlap = 1;
+polyCylinder -r 5 -h $baseSize -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+move -r 0 ($currenthieght - $overlap) 0;
+$currenthieght = $currenthieght + ($baseSize / 2) - $overlap;
+
+$baseSize = 5;
+$overlap = 0;
+polyCylinder -r 3 -h $baseSize -sx 20 -sy 1 -sz 1 -ax 0 1 0 -rcp 0 -cuv 3 -ch 1;
+move -r 0 ($currenthieght + ($baseSize / 2) - $overlap) 0;
+$currenthieght = $currenthieght + $baseSize - $overlap;
