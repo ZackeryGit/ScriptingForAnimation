@@ -1,0 +1,29 @@
+
+proc SpiralStaircase(int $count, float $width, float $length, float $height, float $centerDist, float $stepHeight, float $stepRotation)
+{
+    // Setup Inital Cube
+    string $cube[] = `polyCube -w 1 -h 1 -d 1 -sx 1 -sy 1 -sz 1 -ax 0 1 0 -cuv 4 -ch 1`;
+    move -r (-0.5 - $centerDist) 0 0 $cube[0];
+    
+    // Adjust Initial Cube to settings
+    setAttr ($cube[0] + ".scaleZ") $width;
+    setAttr ($cube[0] + ".scaleX") $length;
+    setAttr ($cube[0] + ".scaleY") $height;
+
+    // Set Pivot
+    xform -ws -piv 0 0 0 $cube[0];
+    // Subtract initial Stair
+    $count -= 1;
+
+    // Duplicate the rest
+    while ($count > 0){
+        $cube = `duplicate $cube[0]`;
+
+        move -r 0 $stepHeight 0 $cube[0];
+        rotate -r 0 $stepRotation 0 $cube[0];
+
+        $count -= 1;
+    }
+}
+
+SpiralStaircase(40, .75, 3, .25, 1.25, .25, 15);
