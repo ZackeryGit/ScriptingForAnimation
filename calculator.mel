@@ -75,52 +75,62 @@ proc float Medium (float $nums[]){
     return $num;
 }
 
-proc float calculate (float $nums[], string $operator){
+proc calculate (float $nums[], string $operator){
 
     float $num = 0;
+    string $string;
 
     switch($operator){
         case "+":
             $num = Add($nums);
+            $string = "The Sum of: ";
             break;
         case "-":
             $num = Subtract($nums);
+            $string = "The Difference of: ";
             break;
         case "*":
             $num = Multiply($nums);
+            $string = "The Multiplcation of: ";
             break;
         case "/":
             $num = Divide($nums);
+            $string = "The Divison of: ";
             break;
         case "^":
             $num = Power($nums);
+            $string = "The Power of: ";
             break;
         case "mean":
             $num = Mean($nums);
+            $string = "The Mean of: ";
             break;
         case "medium":
             $num = Medium($nums);
+            $string = "The Medium of: ";
             break;
         default:
             print("Invalid Operator" +  "\n");
             $num = 0;
     }
 
-    return $num;
+    $string = $string + $nums[1];
+
+    for ($i = 1; $i < size($nums); $i++){
+        $string += ", ";
+        $string += $nums[$i];
+    } 
+
+    $string += " is ";
+    $string += $num;
+    print($string + "\n");
 }
 
 
-float $result = calculate({5.0,3.0,1.2,5.0}, "+");
-print($result +  "\n");
-$result = calculate({10.0,3.0,1.2,5.0}, "-");
-print($result +  "\n");
-$result = calculate({5.0,3.3,1.2,5.1}, "*");
-print($result +  "\n");
-$result = calculate({10.0,3.0,1.0}, "/");
-print($result +  "\n");
-$result = calculate({10.0,3.0,2.0},"^");
-print($result +  "\n");
-$result = calculate({20.0,5.0,10.0,3.0,2.0},"mean");
-print($result +  "\n");
-$result = calculate({22.0,20.0,5.0,10.0,3.0,2.0},"medium");
-print($result +  "\n");
+calculate({5.0,3.0,1.2,5.0}, "+");
+calculate({10.0,3.0,1.2,5.0}, "-");
+calculate({5.0,3.3,1.2,5.1}, "*");
+calculate({10.0,3.0,1.0}, "/");
+calculate({10.0,3.0,2.0},"^");
+calculate({20.0,5.0,10.0,3.0,2.0},"mean");
+calculate({22.0,20.0,5.0,10.0,3.0,2.0},"medium");
