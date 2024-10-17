@@ -126,6 +126,19 @@ proc calculate (float $nums[], string $operator){
     print($string + "\n");
 }
 
+string $mWindow = "calculator";
+
+if (`window -exists $mWindow`){
+    deleteUi $mWindow;
+}
+
+$mWindow = `window -sizeable 1 
+                    -title "Calculator"
+                    $mWindow`;
+
+
+showWindow $mWindow;
+
 
 calculate({5.0,3.0,1.2,5.0}, "+");
 calculate({10.0,3.0,1.2,5.0}, "-");

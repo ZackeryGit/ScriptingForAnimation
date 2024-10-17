@@ -1,0 +1,73 @@
+global proc RandomizeSelection()
+{
+    string $field1 = `optionVar -q "minX"`;
+    string $field2 = `optionVar -q "minY"`;
+    string $field3 = `optionVar -q "minZ"`;
+    string $field4 = `optionVar -q "maxX"`;
+    string $field5 = `optionVar -q "maxY"`;
+    string $field6 = `optionVar -q "maxZ"`;
+    string $field7 = `optionVar -q "duplicationAmmount"`;
+
+    float $minXVal = `floatField -q -value $field1`;
+    float $minYVal = `floatField -q -value $field2`;
+    float $minZVal = `floatField -q -value $field3`;
+    float $maxXVal = `floatField -q -value $field4`;
+    float $maxYVal = `floatField -q -value $field5`;
+    float $maxZVal = `floatField -q -value $field6`;
+    int $duplications = `intField -q -value $field7`;
+
+    // Get Selection
+    string $selection[] = `ls -sl`;
+    for ($i = 0; $i < $duplications; $i++){
+        for ($object in $selection){
+            float $randX = `rand $minXVal $maxXVal`;
+            float $randY = `rand $minYVal $maxYVal`;
+            float $randZ = `rand $minZVal $maxZVal`;
+
+            string $duplicatedObjects[] = `duplicate -rr $object`;
+            string $newObject = $duplicatedObjects[0];
+
+            
+            setAttr ($newObject + ".translateX") $randX;
+            setAttr ($newObject + ".translateY") $randY;
+            setAttr ($newObject + ".translateZ") $randZ;
+        }
+    }
+    
+    //print(`floatField -q -value $field1`);
+}
+
+
+string $mWindow = "random_placement";
+if (`window -exists $mWindow`){
+    print("Deleting UI\n");
+    deleteUI $mWindow;
+}
+
+$mWindow = `window -title "Random Placement"
+                    -sizeable 1
+                    $mWindow`;
+string $mColumn = `columnLayout`;
+
+string $minRow = `rowLayout -numberOfColumns 4 -p $mColumn`;
+textField -p $minRow -text "Min" -editable 0;
+optionVar -stringValue "minX" `floatField -p $minRow`;
+optionVar -stringValue "minY" `floatField -p $minRow`;
+optionVar -stringValue "minZ" `floatField -p $minRow`;
+
+
+string $maxRow = `rowLayout -numberOfColumns 4 -p $mColumn`;
+textField -p $maxRow -text "Max" -editable 0;
+optionVar -stringValue "maxX" `floatField -p $maxRow`;
+optionVar -stringValue "maxY" `floatField -p $maxRow`;
+optionVar -stringValue "maxZ" `floatField -p $maxRow`;
+
+string $dupeRow = `rowLayout -numberOfColumns 2 -p $mColumn`;
+textField -p $dupeRow -text "Duplications" -editable 0;
+optionVar -stringValue "duplicationAmmount" `intField -p $dupeRow`;
+
+
+
+button -parent $mColumn -label "Randomize Placement" - command RandomizeSelection;
+
+showWindow $mWindow;
