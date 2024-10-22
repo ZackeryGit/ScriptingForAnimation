@@ -75,7 +75,7 @@ proc float Medium (float $nums[]){
     return $num;
 }
 
-proc calculate (float $nums[], string $operator){
+proc string calculate (float $nums[], string $operator){
 
     float $num = 0;
     string $string;
@@ -114,7 +114,7 @@ proc calculate (float $nums[], string $operator){
             $num = 0;
     }
 
-    $string = $string + $nums[1];
+    $string = $string + $nums[0];
 
     for ($i = 1; $i < size($nums); $i++){
         $string += ", ";
@@ -124,24 +124,70 @@ proc calculate (float $nums[], string $operator){
     $string += " is ";
     $string += $num;
     print($string + "\n");
+
+    return $string;
+}
+
+global proc UiCalculate (){
+    string $field1 = `optionVar -q "numbersField"`;
+    print($field1);
+    string $field2 = `optionVar -q "operatorField"`;
+    string $resultField = `optionVar -q "resultField"`;
+    // Get Numbers
+    string $NumbersList = `textField -query -text $field1`;
+    // Get Operator
+    string $selectedOperator = `optionMenu -query -value $field2`;
+
+    // Remove Spaces
+    $NumbersList = substituteAllString($NumbersList, " ", "");
+    // Seperate numbers into an array
+    string $NumbersArray[];
+    tokenize($NumbersList, ",", $NumbersArray);
+
+    // Convert string array to float array
+    float $floatNumbers[];
+    for ($i = 0; $i < size($NumbersArray); $i++) {
+        $floatNumbers[$i] = (float) $NumbersArray[$i];
+    }
+
+    string $result = calculate($floatNumbers, $selectedOperator);
+    textField -edit -text $result $resultField;
 }
 
 string $mWindow = "calculator";
 
 if (`window -exists $mWindow`){
-    deleteUi $mWindow;
+    deleteUI $mWindow;
 }
 
 $mWindow = `window -sizeable 1 
                     -title "Calculator"
                     $mWindow`;
+string $mColumn = `columnLayout`;
 
+textField -p $mColumn -text "Enter Numbers with a \",\" to seperate" -editable 0 -width 200;
+
+string $numberRow = `rowLayout -numberOfColumns 2 -p $mColumn`;
+textField -p $numberRow -text "Numbers" -editable 0;
+optionVar -stringValue "numbersField" `textField -width 400 -p $numberRow`;
+
+optionVar -stringValue "operatorField" `optionMenu -label "Operator" -p $mColumn myDropdown`;
+menuItem -label "+";
+menuItem -label "-";
+menuItem -label "*";
+menuItem -label "/";
+menuItem -label "^";
+menuItem -label "mean";
+menuItem -label "medium";
+
+button -parent $mColumn -label "Calculate" -command UiCalculate;
+optionVar -stringValue "resultField" `textField -p $mColumn -text "" -editable 0 -width 600`;
 
 showWindow $mWindow;
 
-
+UiCalculate();
 calculate({5.0,3.0,1.2,5.0}, "+");
-calculate({10.0,3.0,1.2,5.0}, "-");
+calculate({10.0,3.0,1.2,5.0}, "-"); 
 calculate({5.0,3.3,1.2,5.1}, "*");
 calculate({10.0,3.0,1.0}, "/");
 calculate({10.0,3.0,2.0},"^");
