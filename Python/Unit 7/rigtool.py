@@ -1,5 +1,4 @@
 import maya.cmds as c
-
 selection = c.ls(selection=True)
 print(selection)
 for item in selection:
@@ -13,4 +12,3 @@ for item in selection:
     c.parent(item, group)
     # Freeze Transforms
     c.makeIdentity(item, scale=True, translate=True, rotate=True, normal=True)
-    
